@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecrutAI — Accès Sécurisé</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1A0533;
+    --accent: #7C3AED;
+    --accent-light: #A78BFA;
+    --accent-glow: #EDE9FE;
+    --surface: #F9F7FF;
+    --white: #FFFFFF;
+    --text-main: #0F0A1E;
+    --text-muted: #6B7280;
+    --text-light: #9CA3AF;
+    --border: #E5E0F5;
+    --green: #059669;
+    --green-light: #D1FAE5;
+    --orange: #D97706;
+    --orange-light: #FEF3C7;
+    --red: #DC2626;
+    --red-light: #FEE2E2;
+    --blue: #2563EB;
+    --blue-light: #DBEAFE;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --shadow: 0 1px 3px rgba(124,58,237,0.08), 0 8px 24px rgba(124,58,237,0.06);
+    --shadow-lg: 0 4px 16px rgba(124,58,237,0.14), 0 24px 48px rgba(124,58,237,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text-main);
+    min-height: 100vh;
+  }
+
+  /* --- LOGIN SYSTEM --- */
+  #login-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .login-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+
+  .login-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 30px;
+  }
+
+  .login-logo span { color: var(--accent); }
+
+  .login-field {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .login-btn:hover { background: #6D28D9; }
+
+  #error-msg {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* --- APP CONTENT (HIDDEN BY DEFAULT) --- */
+  #app-content {
+    display: none;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--primary);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: white;
+  }
+
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: white;
+  }
+
+  .logo-text span { color: var(--accent-light); }
+
+  .sidebar-section { padding: 20px 12px 8px; }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 0 12px;
+    margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 2px;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: white; }
+  .nav-item.active { background: var(--accent); color: white; font-weight: 500; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    color: white;
+  }
+
+  .user-name { font-size: 13px; font-weight: 500; color: white; }
+  .user-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  /* Main content */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .content { padding: 32px; }
+
+  /* KPI cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .kpi-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Recrut<span>AI</span></div>
+    <div class="login-field">
+      <label style="font-size: 12px; color: var(--text-muted);">Identifiant</label>
+      <input type="text" id="username" class="login-input" placeholder="admin">
+    </div>
+    <div class="login-field">
+      <label style="font-size: 12px; color: var(--text-muted);">Mot de passe</label>
+      <input type="password" id="password" class="login-input" placeholder="••••••••">
+    </div>
+    <button class="login-btn" onclick="validateLogin()">Se connecter</button>
+    <p id="error-msg">Identifiants incorrects.</p>
+  </div>
+</div>
+
+<div id="app-content">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">RA</div>
+        <div class="logo-text">Recrut<span>AI</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Principal</div>
+      <div class="nav-item active">◈ Tableau de bord</div>
+      <div class="nav-item">📋 Offres d'emploi</div>
+      <div class="nav-item">👥 Candidats</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar">AD</div>
+        <div>
+          <div class="user-name">Administrateur</div>
+          <div class="user-role">Responsable RH</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <header class="topbar">
+      <div style="font-family: 'Syne'; font-weight: 700;">Tableau de bord</div>
+      <div style="color: var(--text-muted); font-size: 13px;">Mardi 28 avril 2026</div>
+    </header>
+
+    <div class="content">
+      <h1 style="font-family: 'Syne'; margin-bottom: 8px;">Bonjour, Admin 👋</h1>
+      <p style="color: var(--text-muted); font-size: 14px;">Voici un aperçu de vos activités de recrutement.</p>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted);">OFFRES ACTIVES</div>
+          <div style="font-size: 32px; font-weight: 700; margin-top: 8px;">12</div>
+        </div>
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted);">CANDIDATURES</div>
+          <div style="font-size: 32px; font-weight: 700; margin-top: 8px;">248</div>
+        </div>
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted);">SCORE MOYEN</div>
+          <div style="font-size: 32px; font-weight: 700; margin-top: 8px;">71%</div>
+        </div>
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted);">TEMPS MOYEN</div>
+          <div style="font-size: 32px; font-weight: 700; margin-top: 8px;">8j</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function validateLogin() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const error = document.getElementById('error-msg');
+    const loginScreen = document.getElementById('login-screen');
+    const appContent = document.getElementById('app-content');
+
+    if (user === "admin" && pass === "12345678") {
+      loginScreen.style.display = "none";
+      appContent.style.display = "flex";
+    } else {
+      error.style.display = "block";
+    }
+  }
+
+  // Permet de valider avec la touche Entrée
+  document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      validateLogin();
+    }
+  });
+</script>
+
+</body>
+</html>
