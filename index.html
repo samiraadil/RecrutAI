@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RecrutAI — Console de Gestion de Talents</title>
+    <title>RecrutAI — Console Executive</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,10 +18,10 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); }
 
         /* AUTH */
-        #login-screen { position: fixed; inset: 0; background: var(--primary); display: flex; align-items: center; justify-content: center; z-index: 2000; transition: 0.4s; }
+        #login-screen { position: fixed; inset: 0; background: var(--primary); display: flex; align-items: center; justify-content: center; z-index: 2000; }
         .login-card { background: var(--white); padding: 40px; border-radius: 12px; width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
 
         /* LAYOUT */
@@ -39,27 +39,17 @@
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* COMPONENTS */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        /* CARDS & TABLES */
         .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; }
-        .stat-value { font-family: 'Lexend'; font-size: 28px; font-weight: 700; margin-top: 8px; }
-
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 16px; background: #F1F5F9; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-light); }
         td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
         
         .badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; }
-        .badge-match { background: #DCFCE7; color: #166534; }
-        .badge-blue { background: #DBEAFE; color: #1E40AF; }
+        .tag { display: inline-block; background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 5px; }
 
-        /* PROJECTION BOX */
-        .projection-box { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color: white; padding: 32px; border-radius: 12px; }
-        .timeline { border-left: 2px solid var(--brand); padding-left: 20px; margin-left: 10px; }
-        .timeline-step { position: relative; margin-bottom: 25px; }
-        .timeline-step::before { content: ''; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; background: var(--brand); border-radius: 50%; }
-
-        /* INPUTS */
-        .btn { padding: 10px 20px; border-radius: var(--radius); border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        /* BUTTONS */
+        .btn { padding: 10px 20px; border-radius: var(--radius); border: none; font-weight: 600; cursor: pointer; }
         .btn-brand { background: var(--brand); color: white; }
     </style>
 </head>
@@ -67,10 +57,9 @@
 
     <div id="login-screen">
         <div class="login-card">
-            <div class="nav-brand" style="color: var(--primary);"><i class="fas fa-brain" style="color:var(--brand)"></i> RecrutAI</div>
-            <p style="color:var(--text-light); font-size:14px; margin-bottom:24px;">Authentification sécurisée du portail RH.</p>
-            <input type="text" id="user" class="btn" style="width:100%; border:1px solid var(--border); margin-bottom:15px;" placeholder="Identifiant (admin)">
-            <input type="password" id="pass" class="btn" style="width:100%; border:1px solid var(--border); margin-bottom:15px;" placeholder="Mot de passe (12345678)">
+            <div class="nav-brand" style="color: var(--primary);"><i class="fas fa-layer-group" style="color:var(--brand)"></i> RecrutAI</div>
+            <input type="text" id="user" class="btn" style="width:100%; border:1px solid var(--border); margin-bottom:15px; text-align:left;" placeholder="Admin ID">
+            <input type="password" id="pass" class="btn" style="width:100%; border:1px solid var(--border); margin-bottom:15px; text-align:left;" placeholder="Mot de passe">
             <button class="btn btn-brand" style="width:100%;" onclick="login()">Se connecter</button>
         </div>
     </div>
@@ -79,98 +68,122 @@
         <aside class="sidebar">
             <div class="nav-brand"><i class="fas fa-microchip"></i> RecrutAI</div>
             <nav>
-                <div class="nav-item active" onclick="navigate('dash')"><i class="fas fa-th-large"></i> Dashboard</div>
-                <div class="nav-item" onclick="navigate('offres')"><i class="fas fa-briefcase"></i> Offres d'emploi</div>
-                <div class="nav-item" onclick="navigate('cands')"><i class="fas fa-users-gear"></i> Vivier & NLP</div>
+                <div class="nav-item active" onclick="navigate('dash')"><i class="fas fa-chart-line"></i> Dashboard</div>
+                <div class="nav-item" onclick="navigate('offres')"><i class="fas fa-briefcase"></i> Gestion des Offres</div>
+                <div class="nav-item" onclick="navigate('cands')"><i class="fas fa-dna"></i> Analyse Sémantique</div>
                 <div class="nav-item" onclick="navigate('future')" style="color: #FCD34D;"><i class="fas fa-wand-magic-sparkles"></i> Projection Carrière</div>
             </nav>
         </aside>
 
         <div class="main-container">
             <header class="top-header">
-                <h4 id="page-title" style="font-family:'Lexend';">Vue d'ensemble</h4>
-                <div style="font-size:13px; font-weight:600;">Admin : Samira Adil</div>
+                <h4 id="page-title" style="font-family:'Lexend'; color:var(--text-light)">Vue d'ensemble</h4>
+                <div style="font-size:13px; font-weight:600;"><i class="fas fa-circle" style="color:var(--success); font-size:8px;"></i> Serveur Opérationnel</div>
             </header>
 
             <section id="dash" class="page active">
-                <div class="kpi-grid">
-                    <div class="card"><p style="font-size:12px; color:var(--text-light)">CANDIDATS TRIÉS</p><div class="stat-value">1,402</div></div>
-                    <div class="card"><p style="font-size:12px; color:var(--text-light)">GAIN DE TEMPS</p><div class="stat-value">84%</div></div>
-                    <div class="card"><p style="font-size:12px; color:var(--text-light)">PRÉCISION NLP</p><div class="stat-value">92%</div></div>
-                    <div class="card"><p style="font-size:12px; color:var(--text-light)">ALERTES</p><div class="stat-value" style="color:var(--brand)">3</div></div>
+                <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:20px; margin-bottom:30px;">
+                    <div class="card"><p style="font-size:11px; color:var(--text-light)">TOTAL CV</p><h2 style="font-family:'Lexend'">2,840</h2></div>
+                    <div class="card"><p style="font-size:11px; color:var(--text-light)">MATCHING > 80%</p><h2 style="font-family:'Lexend'">142</h2></div>
+                    <div class="card"><p style="font-size:11px; color:var(--text-light)">ENTRETIENS</p><h2 style="font-family:'Lexend'">28</h2></div>
+                    <div class="card"><p style="font-size:11px; color:var(--text-light)">RECRUTÉS</p><h2 style="font-family:'Lexend'">05</h2></div>
                 </div>
                 <div class="card">
-                    <h4 style="margin-bottom:20px; font-family:'Lexend';">Dernières Activités</h4>
-                    <table>
-                        <thead><tr><th>Candidat</th><th>Poste</th><th>Compatibilité</th><th>Statut</th></tr></thead>
-                        <tbody>
-                            <tr><td><strong>Karim Azizi</strong></td><td>Data Architect</td><td><span class="badge badge-match">96%</span></td><td>Entretien</td></tr>
-                            <tr><td><strong>Lina Mansouri</strong></td><td>MLOps</td><td><span class="badge badge-match">89%</span></td><td>En attente</td></tr>
-                        </tbody>
-                    </table>
+                    <h4 style="margin-bottom:20px; font-family:'Lexend'">Flux des Candidatures Récentes</h4>
+                    <canvas id="mainChart" height="100"></canvas>
                 </div>
             </section>
 
             <section id="offres" class="page">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-                    <h2 style="font-family:'Lexend';">Gestion des Recrutements</h2>
-                    <button class="btn btn-brand">+ Nouvelle Offre</button>
+                <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
+                    <h2 style="font-family:'Lexend'">Pilotage des Campagnes</h2>
+                    <button class="btn btn-brand">+ Publier sur LinkedIn/Indeed</button>
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
                     <div class="card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <span class="badge badge-blue">Technique</span>
-                            <span style="font-size:12px; color:var(--success); font-weight:bold;">● Active</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <span class="badge" style="background:#DBEAFE; color:#1E40AF;">Réf: RA-2026-01</span>
+                            <span style="font-size:12px; font-weight:bold; color:var(--success)">DIFFUSION : ACTIVE</span>
                         </div>
-                        <h3 style="margin:15px 0 5px 0;">Lead Data Engineer</h3>
-                        <p style="font-size:13px; color:var(--text-light);">Localisation: Casablanca / Hybride</p>
-                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:bold;">45 Candidatures</span>
-                            <button class="btn" style="background:#F1F5F9; font-size:12px;">Gérer</button>
+                        <h3 style="font-family:'Lexend'; margin-bottom:10px;">Senior Cloud Architect</h3>
+                        <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">Équipe Infrastructure • 45-60k € • Hybride</p>
+                        <div style="background:var(--bg-body); padding:15px; border-radius:8px; margin-bottom:15px;">
+                            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px;">
+                                <span>Progression du Sourcing</span>
+                                <strong>85%</strong>
+                            </div>
+                            <div style="height:6px; background:#E2E8F0; border-radius:3px;"><div style="width:85%; height:100%; background:var(--brand); border-radius:3px;"></div></div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:1; text-align:center; border-right:1px solid var(--border);"><strong>128</strong><br><small>Vues</small></div>
+                            <div style="flex:1; text-align:center; border-right:1px solid var(--border);"><strong>42</strong><br><small>CV Reçus</small></div>
+                            <div style="flex:1; text-align:center; color:var(--brand);"><strong>12</strong><br><small>Qualifiés IA</small></div>
                         </div>
                     </div>
+
                     <div class="card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <span class="badge badge-blue">Produit</span>
-                            <span style="font-size:12px; color:var(--warning); font-weight:bold;">● Brouillon</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <span class="badge" style="background:#F1F5F9; color:#475569;">Réf: RA-2026-04</span>
+                            <span style="font-size:12px; font-weight:bold; color:var(--warning)">STATUT : BROUILLON</span>
                         </div>
-                        <h3 style="margin:15px 0 5px 0;">Product Manager AI</h3>
-                        <p style="font-size:13px; color:var(--text-light);">Localisation: Paris / Remote</p>
-                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:bold;">12 Candidatures</span>
-                            <button class="btn" style="background:#F1F5F9; font-size:12px;">Gérer</button>
-                        </div>
+                        <h3 style="font-family:'Lexend'; margin-bottom:10px;">Full Stack Developer (React/Python)</h3>
+                        <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">Équipe Produit • 35-45k € • Remote</p>
+                        <button class="btn" style="width:100%; border:1px dashed var(--border); background:none; color:var(--text-light)">Finaliser la fiche de poste</button>
                     </div>
                 </div>
             </section>
 
             <section id="cands" class="page">
-                <h2 style="font-family:'Lexend'; margin-bottom:24px;">Exploration du Vivier NLP</h2>
-                <div class="card">
-                    <div style="background:var(--brand-light); padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--brand);">
-                        <p style="font-size:14px; color:var(--brand); font-weight:500;">
-                            <i class="fas fa-info-circle"></i> Le modèle NLP utilise la similarité sémantique pour détecter des compétences non explicites.
-                        </p>
+                <h2 style="font-family:'Lexend'; margin-bottom:10px;">Moteur d'Extraction Sémantique</h2>
+                <p style="color:var(--text-light); margin-bottom:30px;">Analyse profonde des CV via NER (Named Entity Recognition) et Similarity Scoring.</p>
+
+                <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:25px;">
+                    <div class="card">
+                        <h4 style="margin-bottom:20px;">Extraction Automatique de Compétences</h4>
+                        <table>
+                            <thead><tr><th>Entité Extraite</th><th>Catégorie</th><th>Fréquence Base</th><th>Pertinence Marché</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>TensorFlow / Keras</strong></td><td>Machine Learning</td><td>High</td><td><span style="color:var(--success)">★★★★★</span></td></tr>
+                                <tr><td><strong>FastAPI</strong></td><td>Backend</td><td>Medium</td><td><span style="color:var(--success)">★★★★☆</span></td></tr>
+                                <tr><td><strong>Docker / K8s</strong></td><td>DevOps</td><td>High</td><td><span style="color:var(--success)">★★★★★</span></td></tr>
+                                <tr><td><strong>Leadership / Agile</strong></td><td>Soft Skills</td><td>Medium</td><td><span style="color:var(--success)">★★★☆☆</span></td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <table>
-                        <thead><tr><th>Expertise</th><th>Nombre</th><th>Tendance</th><th>Action</th></tr></thead>
-                        <tbody>
-                            <tr><td>Python / PyTorch</td><td>124</td><td style="color:var(--success);">+12%</td><td><i class="fas fa-search"></i></td></tr>
-                            <tr><td>Cloud Architecture</td><td>89</td><td style="color:var(--success);">+5%</td><td><i class="fas fa-search"></i></td></tr>
-                            <tr><td>Management Agile</td><td>42</td><td style="color:var(--danger);">-2%</td><td><i class="fas fa-search"></i></td></tr>
-                        </tbody>
-                    </table>
+                    
+                    <div class="card">
+                        <h4 style="margin-bottom:20px;">Top Matching Sémantique</h4>
+                        <div style="display:flex; flex-direction:column; gap:15px;">
+                            <div style="padding:12px; border:1px solid var(--brand-light); border-left:4px solid var(--brand); border-radius:4px;">
+                                <p style="font-weight:600; font-size:14px;">Karim Azizi</p>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:11px; color:var(--text-light)">Match : Data Architect</span>
+                                    <span style="color:var(--brand); font-weight:bold;">98%</span>
+                                </div>
+                            </div>
+                            <div style="padding:12px; border:1px solid var(--border); border-left:4px solid var(--success); border-radius:4px;">
+                                <p style="font-weight:600; font-size:14px;">Lina Mansouri</p>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:11px; color:var(--text-light)">Match : ML Engineer</span>
+                                    <span style="color:var(--success); font-weight:bold;">92%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn" style="width:100%; margin-top:20px; font-size:12px; background:var(--primary); color:white;">Lancer un nouveau Scan CV</button>
+                    </div>
                 </div>
             </section>
 
             <section id="future" class="page">
-                <h2 style="font-family:'Lexend'; margin-bottom:10px;">Mobilité Prédictive</h2>
-                <div class="projection-box">
-                    <h3 style="font-family:'Lexend'; margin-bottom:20px;">Analyse de Trajectoire : Karim Azizi</h3>
-                    <div class="timeline">
-                        <div class="timeline-step"><h5>6 MOIS : Expert Cloud Senior</h5><p style="font-size:13px; color:#94A3B8;">Validation des certifications internes.</p></div>
-                        <div class="timeline-step"><h5>18 MOIS : Tech Lead</h5><p style="font-size:13px; color:#94A3B8;">Potentiel de mentorat identifié à 88%.</p></div>
-                        <div class="timeline-step"><h5>36 MOIS : Architecte Solutions Stratégique</h5><p style="font-size:13px; color:#94A3B8;">Matching profil cible : 92%.</p></div>
+                <div style="max-width:800px;">
+                    <h2 style="font-family:'Lexend'; margin-bottom:24px;">Prédiction d'Évolution (IA)</h2>
+                    <div class="card" style="background:var(--primary); color:white; border:none;">
+                        <div style="border-left:2px solid var(--brand); padding-left:20px;">
+                            <h3 style="color:var(--brand)">Candidat : Karim Azizi</h3>
+                            <p style="font-size:14px; margin:15px 0; color:#94A3B8;">Analyse des compétences adjacentes (Adjacent Skills) :</p>
+                            <p style="font-size:15px; line-height:1.6;">"Le candidat possède 85% des prérequis pour devenir <strong>Directeur Technique (CTO)</strong> d'ici 36 mois. Le NLP identifie une forte expertise en gestion de dettes techniques et architecture microservices."</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -184,6 +197,7 @@
             if(u === "admin" && p === "12345678") {
                 document.getElementById('login-screen').style.display = "none";
                 document.getElementById('app-content').style.display = "flex";
+                initChart();
             }
         }
 
@@ -192,9 +206,26 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
-            
-            const titles = {'dash': 'Vue d\'ensemble', 'offres': 'Offres d\'emploi', 'cands': 'Vivier & NLP', 'future': 'Intelligence Prédictive'};
-            document.getElementById('page-title').innerText = titles[id];
+            document.getElementById('page-title').innerText = event.currentTarget.innerText;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai'],
+                    datasets: [{
+                        label: 'Volume de Candidatures',
+                        data: [450, 620, 580, 840, 1100],
+                        borderColor: '#2563EB',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
         }
     </script>
 </body>
