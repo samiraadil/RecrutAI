@@ -6,109 +6,61 @@
     <title>RecrutAI — Console de Gestion de Talents</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            /* Palette Corporate Bleue */
-            --primary: #0F172A;   /* Fond Sidebar / Textes sombres */
-            --brand: #2563EB;     /* Couleur d'action principale */
-            --brand-light: #EFF6FF;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --bg-body: #F8FAFC;
-            --white: #FFFFFF;
-            --border: #E2E8F0;
-            --text-main: #1E293B;
-            --text-light: #64748B;
-            --radius: 8px;
+            --primary: #0F172A; --brand: #2563EB; --brand-light: #EFF6FF;
+            --success: #10B981; --warning: #F59E0B; --danger: #EF4444;
+            --bg-body: #F8FAFC; --white: #FFFFFF; --border: #E2E8F0;
+            --text-main: #1E293B; --text-light: #64748B; --radius: 8px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; }
 
-        /* ÉCRAN D'AUTHENTIFICATION */
-        #login-screen { 
-            position: fixed; inset: 0; background: var(--primary); 
-            display: flex; align-items: center; justify-content: center; z-index: 2000; 
-        }
-        .login-card { 
-            background: var(--white); padding: 40px; border-radius: 12px; 
-            width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
-        }
-        .login-title { font-family: 'Lexend'; font-size: 24px; margin-bottom: 8px; color: var(--primary); }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-light); }
-        .input-field { 
-            width: 100%; padding: 12px; border: 1px solid var(--border); 
-            border-radius: var(--radius); outline: none; transition: 0.2s;
-        }
-        .input-field:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .btn-login { 
-            width: 100%; padding: 12px; background: var(--brand); color: white; 
-            border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; 
-        }
+        /* AUTH */
+        #login-screen { position: fixed; inset: 0; background: var(--primary); display: flex; align-items: center; justify-content: center; z-index: 2000; transition: 0.4s; }
+        .login-card { background: var(--white); padding: 40px; border-radius: 12px; width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
 
-        /* MISE EN PAGE PRINCIPALE */
+        /* LAYOUT */
         #app-content { display: none; min-height: 100vh; }
-        
-        /* BARRE LATÉRALE (SIDEBAR) */
-        .sidebar { 
-            width: 280px; background: var(--primary); color: white; 
-            position: fixed; height: 100vh; padding: 24px; z-index: 100;
-        }
+        .sidebar { width: 280px; background: var(--primary); color: white; position: fixed; height: 100vh; padding: 24px; z-index: 100; }
         .nav-brand { font-family: 'Lexend'; font-size: 22px; margin-bottom: 40px; display: flex; align-items: center; gap: 12px; }
-        .nav-item { 
-            padding: 12px 16px; border-radius: var(--radius); cursor: pointer; 
-            color: #94A3B8; display: flex; align-items: center; gap: 12px; 
-            font-size: 14px; margin-bottom: 8px; transition: 0.2s; 
-        }
+        .nav-item { padding: 12px 16px; border-radius: var(--radius); cursor: pointer; color: #94A3B8; display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 8px; transition: 0.2s; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
         .nav-item.active { background: var(--brand); }
 
-        /* ZONE DE CONTENU PRINCIPALE */
         .main-container { margin-left: 280px; width: calc(100% - 280px); }
-        .top-header { 
-            background: var(--white); height: 70px; border-bottom: 1px solid var(--border); 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 32px; position: sticky; top: 0; z-index: 50; 
-        }
+        .top-header { background: var(--white); height: 70px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
 
-        /* PAGES & GRILLES */
         .page { display: none; padding: 32px; animation: slideUp 0.4s ease; }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* COMPONENTS */
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
-        .card { 
-            background: var(--white); border-radius: var(--radius); 
-            border: 1px solid var(--border); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-        }
+        .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; }
         .stat-value { font-family: 'Lexend'; font-size: 28px; font-weight: 700; margin-top: 8px; }
 
-        /* TABLEAUX */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 16px; background: #F1F5F9; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-light); }
         td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
-        tr.row-hover:hover { background: var(--brand-light); cursor: pointer; }
-
-        /* FONCTIONNALITÉ UNIQUE : PROJECTION PRÉDICTIVE */
-        .projection-box {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-            color: white; padding: 32px; border-radius: 12px; margin-top: 20px;
-        }
-        .timeline { border-left: 2px solid var(--brand); padding-left: 20px; margin-left: 10px; }
-        .timeline-step { position: relative; margin-bottom: 25px; }
-        .timeline-step::before {
-            content: ''; position: absolute; left: -26px; top: 5px;
-            width: 10px; height: 10px; background: var(--brand); border-radius: 50%;
-        }
-
+        
         .badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; }
         .badge-match { background: #DCFCE7; color: #166534; }
+        .badge-blue { background: #DBEAFE; color: #1E40AF; }
+
+        /* PROJECTION BOX */
+        .projection-box { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color: white; padding: 32px; border-radius: 12px; }
+        .timeline { border-left: 2px solid var(--brand); padding-left: 20px; margin-left: 10px; }
+        .timeline-step { position: relative; margin-bottom: 25px; }
+        .timeline-step::before { content: ''; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; background: var(--brand); border-radius: 50%; }
+
+        /* INPUTS */
+        .btn { padding: 10px 20px; border-radius: var(--radius); border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-brand { background: var(--brand); color: white; }
     </style>
 </head>
 <body>
@@ -117,16 +69,9 @@
         <div class="login-card">
             <div class="nav-brand" style="color: var(--primary);"><i class="fas fa-brain" style="color:var(--brand)"></i> RecrutAI</div>
             <p style="color:var(--text-light); font-size:14px; margin-bottom:24px;">Authentification sécurisée du portail RH.</p>
-            <div class="input-group">
-                <label>Identifiant</label>
-                <input type="text" id="user" class="input-field" placeholder="admin">
-            </div>
-            <div class="input-group">
-                <label>Mot de passe</label>
-                <input type="password" id="pass" class="input-field" placeholder="••••••••">
-            </div>
-            <button class="btn-login" onclick="login()">Se connecter</button>
-            <p id="err" style="color:var(--danger); font-size:12px; margin-top:15px; display:none; text-align:center;">Identifiants invalides.</p>
+            <input type="text" id="user" class="btn" style="width:100%; border:1px solid var(--border); margin-bottom:15px;" placeholder="Identifiant (admin)">
+            <input type="password" id="pass" class="btn" style="width:100%; border:1px solid var(--border); margin-bottom:15px;" placeholder="Mot de passe (12345678)">
+            <button class="btn btn-brand" style="width:100%;" onclick="login()">Se connecter</button>
         </div>
     </div>
 
@@ -144,122 +89,112 @@
         <div class="main-container">
             <header class="top-header">
                 <h4 id="page-title" style="font-family:'Lexend';">Vue d'ensemble</h4>
-                <div style="display:flex; align-items:center; gap:20px;">
-                    <div style="text-align:right;">
-                        <p style="font-size:13px; font-weight:600;">S. Adil</p>
-                        <p style="font-size:11px; color:var(--text-light);">Administrateur</p>
-                    </div>
-                    <div style="width:40px; height:40px; background:var(--brand); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">SA</div>
-                </div>
+                <div style="font-size:13px; font-weight:600;">Admin : Samira Adil</div>
             </header>
 
             <section id="dash" class="page active">
                 <div class="kpi-grid">
-                    <div class="card"><p class="stat-label">Candidats triés</p><div class="stat-value">1,402</div></div>
-                    <div class="card"><p class="stat-label">Gain de temps (NLP)</p><div class="stat-value">84%</div></div>
-                    <div class="card"><p class="stat-label">Précision Matching</p><div class="stat-value">92.4%</div></div>
-                    <div class="card"><p class="stat-label">Offres Actives</p><div class="stat-value">12</div></div>
+                    <div class="card"><p style="font-size:12px; color:var(--text-light)">CANDIDATS TRIÉS</p><div class="stat-value">1,402</div></div>
+                    <div class="card"><p style="font-size:12px; color:var(--text-light)">GAIN DE TEMPS</p><div class="stat-value">84%</div></div>
+                    <div class="card"><p style="font-size:12px; color:var(--text-light)">PRÉCISION NLP</p><div class="stat-value">92%</div></div>
+                    <div class="card"><p style="font-size:12px; color:var(--text-light)">ALERTES</p><div class="stat-value" style="color:var(--brand)">3</div></div>
                 </div>
-
                 <div class="card">
-                    <h4 style="margin-bottom:20px; font-family:'Lexend';">Dernières Analyses de CV</h4>
+                    <h4 style="margin-bottom:20px; font-family:'Lexend';">Dernières Activités</h4>
                     <table>
-                        <thead>
-                            <tr><th>Candidat</th><th>Poste</th><th>Compatibilité IA</th><th>Statut</th></tr>
-                        </thead>
+                        <thead><tr><th>Candidat</th><th>Poste</th><th>Compatibilité</th><th>Statut</th></tr></thead>
                         <tbody>
-                            <tr class="row-hover">
-                                <td><strong>Karim Azizi</strong></td><td>Data Architect</td>
-                                <td><span class="badge badge-match">96% Similarité</span></td>
-                                <td style="color:var(--success); font-weight:600;">Approuvé</td>
-                            </tr>
-                            <tr class="row-hover">
-                                <td><strong>Lina Mansouri</strong></td><td>MLOps Engineer</td>
-                                <td><span class="badge badge-match">89% Similarité</span></td>
-                                <td style="color:var(--warning); font-weight:600;">En attente</td>
-                            </tr>
+                            <tr><td><strong>Karim Azizi</strong></td><td>Data Architect</td><td><span class="badge badge-match">96%</span></td><td>Entretien</td></tr>
+                            <tr><td><strong>Lina Mansouri</strong></td><td>MLOps</td><td><span class="badge badge-match">89%</span></td><td>En attente</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="offres" class="page">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                    <h2 style="font-family:'Lexend';">Gestion des Recrutements</h2>
+                    <button class="btn btn-brand">+ Nouvelle Offre</button>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span class="badge badge-blue">Technique</span>
+                            <span style="font-size:12px; color:var(--success); font-weight:bold;">● Active</span>
+                        </div>
+                        <h3 style="margin:15px 0 5px 0;">Lead Data Engineer</h3>
+                        <p style="font-size:13px; color:var(--text-light);">Localisation: Casablanca / Hybride</p>
+                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:bold;">45 Candidatures</span>
+                            <button class="btn" style="background:#F1F5F9; font-size:12px;">Gérer</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span class="badge badge-blue">Produit</span>
+                            <span style="font-size:12px; color:var(--warning); font-weight:bold;">● Brouillon</span>
+                        </div>
+                        <h3 style="margin:15px 0 5px 0;">Product Manager AI</h3>
+                        <p style="font-size:13px; color:var(--text-light);">Localisation: Paris / Remote</p>
+                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:bold;">12 Candidatures</span>
+                            <button class="btn" style="background:#F1F5F9; font-size:12px;">Gérer</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="cands" class="page">
+                <h2 style="font-family:'Lexend'; margin-bottom:24px;">Exploration du Vivier NLP</h2>
+                <div class="card">
+                    <div style="background:var(--brand-light); padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--brand);">
+                        <p style="font-size:14px; color:var(--brand); font-weight:500;">
+                            <i class="fas fa-info-circle"></i> Le modèle NLP utilise la similarité sémantique pour détecter des compétences non explicites.
+                        </p>
+                    </div>
+                    <table>
+                        <thead><tr><th>Expertise</th><th>Nombre</th><th>Tendance</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>Python / PyTorch</td><td>124</td><td style="color:var(--success);">+12%</td><td><i class="fas fa-search"></i></td></tr>
+                            <tr><td>Cloud Architecture</td><td>89</td><td style="color:var(--success);">+5%</td><td><i class="fas fa-search"></i></td></tr>
+                            <tr><td>Management Agile</td><td>42</td><td style="color:var(--danger);">-2%</td><td><i class="fas fa-search"></i></td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
             <section id="future" class="page">
-                <div style="max-width: 900px;">
-                    <h2 style="font-family:'Lexend'; margin-bottom:10px;">Mobilité Interne Prédictive</h2>
-                    <p style="color:var(--text-light); margin-bottom:32px;">Cette fonctionnalité utilise le NLP pour comparer le profil d'un candidat avec l'historique d'évolution des talents de l'entreprise.</p>
-                    
-                    <div class="projection-box">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
-                            <div>
-                                <h3 style="font-family:'Lexend';">Projection : Karim Azizi</h3>
-                                <p style="color:#94A3B8;">Poste actuel : Data Architect</p>
-                            </div>
-                            <div style="text-align:right;">
-                                <div style="font-size:24px; font-weight:700; color:var(--brand);">Score de Potentiel : A+</div>
-                                <p style="font-size:12px; color:#94A3B8;">Analyse basée sur les Soft Skills</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline">
-                            <div class="timeline-step">
-                                <h5 style="color:white;">6 MOIS : Consolidation Technique</h5>
-                                <p style="font-size:13px; color:#94A3B8;">Maîtrise complète de l'infrastructure Cloud interne.</p>
-                            </div>
-                            <div class="timeline-step">
-                                <h5 style="color:var(--brand);">18 MOIS : Evolution vers Lead Tech</h5>
-                                <p style="font-size:13px; color:#94A3B8;">Le NLP détecte des capacités de mentorat élevées dans les expériences passées.</p>
-                            </div>
-                            <div class="timeline-step">
-                                <h5 style="color:var(--success);">36 MOIS : Direction Technique (CTO Office)</h5>
-                                <p style="font-size:13px; color:#94A3B8;">Matching de 87% avec les compétences stratégiques requises.</p>
-                            </div>
-                        </div>
+                <h2 style="font-family:'Lexend'; margin-bottom:10px;">Mobilité Prédictive</h2>
+                <div class="projection-box">
+                    <h3 style="font-family:'Lexend'; margin-bottom:20px;">Analyse de Trajectoire : Karim Azizi</h3>
+                    <div class="timeline">
+                        <div class="timeline-step"><h5>6 MOIS : Expert Cloud Senior</h5><p style="font-size:13px; color:#94A3B8;">Validation des certifications internes.</p></div>
+                        <div class="timeline-step"><h5>18 MOIS : Tech Lead</h5><p style="font-size:13px; color:#94A3B8;">Potentiel de mentorat identifié à 88%.</p></div>
+                        <div class="timeline-step"><h5>36 MOIS : Architecte Solutions Stratégique</h5><p style="font-size:13px; color:#94A3B8;">Matching profil cible : 92%.</p></div>
                     </div>
                 </div>
             </section>
-
-            <section id="offres" class="page"><h2>Gestion des Offres d'Emploi</h2></section>
-            <section id="cands" class="page"><h2>Analyse Sémantique des CV</h2></section>
         </div>
     </div>
 
     <script>
-        // GESTION DE LA CONNEXION
         function login() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
-            
-            // Simulation d'authentification (Identifiants demandés)
             if(u === "admin" && p === "12345678") {
-                document.getElementById('login-screen').style.opacity = "0";
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = "none";
-                    document.getElementById('app-content').style.display = "block";
-                }, 400);
-            } else {
-                document.getElementById('err').style.display = "block";
+                document.getElementById('login-screen').style.display = "none";
+                document.getElementById('app-content').style.display = "flex";
             }
         }
 
-        // NAVIGATION ENTRE LES PAGES
-        function navigate(pageId) {
-            // Cacher toutes les pages
+        function navigate(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            // Retirer l'état actif du menu
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            // Afficher la page sélectionnée
-            document.getElementById(pageId).classList.add('active');
+            document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
             
-            // Mettre à jour le titre
-            const titles = {
-                'dash': 'Vue d\'ensemble',
-                'offres': 'Gestion des Recrutements',
-                'cands': 'Analyse des Candidatures',
-                'future': 'Intelligence Prédictive'
-            };
-            document.getElementById('page-title').innerText = titles[pageId];
+            const titles = {'dash': 'Vue d\'ensemble', 'offres': 'Offres d\'emploi', 'cands': 'Vivier & NLP', 'future': 'Intelligence Prédictive'};
+            document.getElementById('page-title').innerText = titles[id];
         }
     </script>
 </body>
